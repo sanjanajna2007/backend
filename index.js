@@ -18,8 +18,9 @@ const todolist = [
         status : "processing"
     }
     
-]
+];
 
+app.use(express.json())
 
 app.get('/', (req,res) =>{
     res.send("yeah new data has created");
@@ -38,6 +39,20 @@ app.get('/', (req,res) =>{
  app.post('/todos', (req,res) => {
     const todo = req.bodyconsole.log(todo);
 
+    if(!todo.task){
+        return res.status(400).json({message:"task is required!"});
+    }
+
+    if(!todo.tags) {
+        return res.status(400).json({message:"tags is required!"});
+    }
+    if(!todo.status) {
+        return res.status(400).json({message:"status is required!"});
+    }
+    if(!todo.id) {
+        return res.status(400).json({message:"id is required!"});
+    }
+
     const newtodo = {
         id : todoArr[todoArr.length-1] .id+1,
         status: todoArr.status,
@@ -46,11 +61,46 @@ app.get('/', (req,res) =>{
     }
 
     TodoArr.push(newtodo)
-    res.send(todo);
+    res.status(400).json(newtodo);
  })
 
- const PORT = process.env.PORT || 3000
+ app.post('/todos', (req,res) => {
 
-app.listen(PORT,() => {
-    console.log('yeahh server is running on this port ${PORT} ');
+    const todo = req.body;
+    console.log(todo);
+
+    if(!todo.task){
+        return res.status(400).json({message:"task is required!"});
+    }
+
+    if(!todo.tags){
+        return res.status(400).json({message:"tags is required!"});
+    }
+
+    if(!todo.status){
+        return res.status(400).json({message:"status is required!"});
+    }
+
+    if(!todo.id){
+        return res.status(400).json({message:"id is required!"});
+    }
+
+    const newtodo = {
+        id: todo.id,
+        task: todo.task,
+        tags: todo.tags,
+        status: todo.status
+    };
+
+    todolist.push(newtodo);
+
+    res.status(201).json(newtodo);
+
+    const port = process.env.port||3000
+    app.listen(port, ()=> {
+        console.log("yeah server is running")
+    })
 });
+
+ 
+
